@@ -1,5 +1,25 @@
 Client Meeting (Every Fortnight)
 Meeting 1 - 15 minutes
+  set up client communication 
+  research optomisation and machine learning - choose which to use 
+  look at pymoo (optomisation)
+  think about data sources 
+  think about final approximate form of end product
+
 Meeting 2 - 15 minutes
+  look through kaggle for datasets 
+  make a rough calendar of sprint dates 
+  choose between app/web app
+
+Meeting 3 - 21 minutes
+  start creating an initial basic prototype
+  set up development enviroment on each machine 
+  research ui's
+  research api's
+  create project structure
+  
+
+
 
 Total - 30 minutes
+
