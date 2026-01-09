@@ -1,1 +1,123 @@
+import pandas as pd
+import yfinance as yf
+import feedparser
+from datetime import datetime, timezone
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
 
+tickers = ["AAPL", "MSFT", "TSLA"]
+startdate = "2021-01-01"
+
+buythresh = 0.60
+sellthresh = 0.40
+trainratio = 0.80
+rssurl = "https://feeds.finance.yahoo.com/rss/2.0/headline?s=AAPL,MSFT,TSLA&region=US&lang=en-US"
+
+analyzer = SentimentIntensityAnalyzer()
+raw = yf.download(tickers, start=startdate, progress=False, group_by="ticker", threads=True)
+
+rows = []
+for t in tickers:
+    if len(tickers) == 1:
+        tmp = raw.reset_index()
+        tmp["ticker"] = t
+        tmp = tmp.rename(columns={"Date": "dt"})
+        rows.append(tmp[["dt", "ticker", "Close"]])
+        break
+    else:
+        if t not in raw.columns.get_level_values(0):
+            continue
+        tmp = raw[t].reset_index()
+        tmp["ticker"] = t
+        tmp = tmp.rename(columns={"Date": "dt"})
+        rows.append(tmp[["dt", "ticker", "Close"]])
+
+df = pd.concat(rows, ignore_index=True)
+df["dt"] = pd.to_datetime(df["dt"])
+df = df.sort_values(["dt", "ticker"]).copy()
+df["returnday1"] = df.groupby("ticker")["Close"].pct_change(1)
+df["fwdret"] = df.groupby("ticker")["Close"].shift(-1) / df["Close"] - 1.0
+df["yup"] = (df["fwdret"] > 0).astype(int)
+
+feed = feedparser.parse(rssurl)
+
+newsrows = []
+for e in getattr(feed, "entries", []):
+    title = getattr(e, "title", "")
+    titlel = title.lower()
+
+    dt = None
+    for key in ["publishedparsed", "updatedparsed"]:
+        t = getattr(e, key, None)
+        if t:
+            dt = datetime(*t[:6], tzinfo=timezone.utc).date()
+            break
+    if dt is None:
+        dt = datetime.now(timezone.utc).date()
+
+    sent = analyzer.polarity_scores(title)["compound"]
+
+    matched = []
+    if "apple" in titlel or "aapl" in titlel:
+        matched.append("AAPL")
+    if "microsoft" in titlel or "msft" in titlel:
+        matched.append("MSFT")
+    if "tesla" in titlel or "tsla" in titlel:
+        matched.append("TSLA")
+
+    for tkr in matched:
+        newsrows.append({"dt": dt, "ticker": tkr, "sentiment": sent})
+
+news = pd.DataFrame(newsrows)
+
+if news.empty:
+    agg = pd.DataFrame(columns=["dt", "ticker", "news_count", "news_sent"])
+else:
+    agg = news.groupby(["dt", "ticker"], as_index=False).agg(
+        newscount=("sentiment", "count"),
+        newssent=("sentiment", "mean"),
+    )
+df["dtdate"] = df["dt"].dt.date
+df = df.merge(agg, left_on=["dtdate", "ticker"], right_on=["dt", "ticker"], how="left")
+
+df["newscount"] = df["newscount"].fillna(0).astype(int)
+df["newssent"] = df["newssent"].fillna(0.0)
+
+df = df.drop(columns=["dtdate", "dty"], errors="ignore").rename(columns={"dtx": "dt"})
+
+df = df.dropna(subset=["returnday1", "yup"]).copy()
+
+features = ["returnday1", "newscount", "newssent"]
+X = df[features]
+y = df["yup"].astype(int)
+
+df = df.sort_values(["dt", "ticker"]).copy()
+splitidx = int(len(df) * trainratio)
+
+Xtrain, Xtest = X.iloc[:splitidx], X.iloc[splitidx:]
+ytrain, ytest = y.iloc[:splitidx], y.iloc[splitidx:]
+model = LogisticRegression(max_iter=500)
+model.fit(Xtrain, ytrain)
+
+testpred = model.predict(Xtest)
+acc = accuracy_score(ytest, testpred)
+
+baselinepred = [1] * len(ytest)
+baselineacc = accuracy_score(ytest, baselinepred)
+
+print(f"model accuracy:    {acc:.3f}")
+print(f"baseline accuracy: {baselineacc:.3f}")
+
+latest = df.sort_values(["ticker", "dt"]).groupby("ticker", as_index=False).tail(1).copy()
+latest["probup"] = model.predict_proba(latest[features])[:, 1]
+def signal(p):
+    if p >= buythresh:
+        return "BUY"
+    if p <= sellthresh:
+        return "SELL"
+    return "HOLD"
+
+latest["signal"] = latest["probup"].apply(signal)
+print("\nSignals:")
+print(latest[["dt", "ticker", "returnday1", "newscount", "newssent", "probup", "signal"]].to_string(index=False))
