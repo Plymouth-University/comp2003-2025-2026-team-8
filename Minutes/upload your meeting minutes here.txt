@@ -11,15 +11,50 @@ Meeting 2 - 15 minutes
   make a rough calendar of sprint dates 
   choose between app/web app
 
-Meeting 3 - 21 minutes
-  start creating an initial basic prototype
-  set up development enviroment on each machine 
-  research ui's
-  research api's
-  create project structure
+19/11/2025
+Matthew Cravens office
+Sprint meeting 3
+Minute taker:Freddie O’Shea
+Attendance
+Present:Freddie O’Shea Alistair Josling
+Absent: George Fidler Daniel Dawdry
+
+Done prior to meeting by team 8:
+Found 6 learning models to use:
+1. Data extraction will be yfinance and requests
+2. For the data transformation will be pandas
+3. Sentiment analysis will be done using Vader 
+4. For the predictive modelling we will use RandomForest
+5. For the decision support stream streamlit will be used
+6. For the evaluation back trader will be used to simulate the trades
+Found datasets to use:
+Smp 500 2024 data
+Big dataset(massive dataset of historical stock data) 
+Cryptocurrency historical prices
+
+Things decided in meeting:
+Will do a web app as opposed to a mobile app
+
+Next step:
+Start ‘tinkering with code’ 
+Do more research into Machine learning models
+Stationary and preprocessing research
+First approach to stock market prediction Kaggle
+analytics vidhya understanding stationary time analysis
+Machine learning mastery time series data stationary python
+
+Meeting lasted 21m
+
+Next meeting:
+3/12/2025
+9am
+Matthew Cravens office
+meeting adjourned 9:21
+
   
 
 
 
 Total - 30 minutes
+
 
