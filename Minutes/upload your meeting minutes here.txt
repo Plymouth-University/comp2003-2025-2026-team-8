@@ -51,10 +51,34 @@ Next meeting:
 Matthew Cravens office
 meeting adjourned 9:21
 
-  
+14/01/2026
+Meeting 5
+Attended Dan Dawdry Freddie O’Shea
+Matthew cravens office
+Basic ai and machine learning completed
+This semester expanded code 
+More sentiment analysis
+More testing with prototype
+Will test code with different parts of the groups code
+Will also test when combined the different parts of the groups code
+Crypto used for data is bitcoin and Aetherium 
+Stocks used are Tesla and apple from S&P
+
+What to do in the next 2 weeks:
+Have a group meeting to assign clear objectives and work for each group member 
+Attend the q&a
+Create the code for the stationary test
+
+Meeting runtime:16
+
+Next Meeting:
+28/01/2026
+9am
+Matthew Cravens office
 
 
 
-Total - 30 minutes
+
+
 
 
