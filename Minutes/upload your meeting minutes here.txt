@@ -76,6 +76,26 @@ Next Meeting:
 9am
 Matthew Cravens office
 
+11/02/2026
+Meeting 5
+Attended Dan Dawdry Freddie O’Shea Alistair Josling 
+Matthew cravens office
+Stationary testing code written 
+Outcome positive with test proving its stationary 
+UI will have multiple different ways to represent the data in accordance with user preferences 
+Dan combining the UI and prototype 
+Ali will implement candlestick
+What to do in the next 2 weeks:
+Continue developing the prototype 
+Meeting runtime:16
+
+Next Meeting:
+25/02/2026
+9am
+Matthew Cravens office
+
+
+
 
 
 
