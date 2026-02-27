@@ -1,0 +1,16 @@
+py -m pip install statsmodels
+from statsmodels.tsa.stattools import adfuller
+def adf_test(series, name):
+    series = series.dropna()
+    result = adfuller(series)
+    print(f"\nADF Test for {name}")
+    print(f"Test Statistic: {result[0]:.3f}")
+    print(f"p-value:        {result[1]:.4f}")
+    if result[1] <= 0.05:
+        print("Result: Stationary (reject null hypothesis)")
+    else:
+        print("Result: Non-stationary (fail to reject null)")
+        for t in tickers:
+    series = df[df["ticker"] == t]["returnday1"]
+    adf_test(series, f"{t} returnday1")
+    df["returnday1_diff"] = df.groupby("ticker")["returnday1"].diff()
