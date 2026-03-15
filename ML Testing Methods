@@ -6,3 +6,10 @@ The dataset is divided into three parts: training data used to train the machine
 and test data used to evaluate the final performance.
 In financial systems this split should be time-based rather than random to avoid future information leaking into the training data.
 This method helps determine whether the model can generalize to unseen market conditions.
+
+2. Walk-Forward Validation
+
+Description:
+Walk-forward validation evaluates the model using a rolling time window. The model is trained on historical data and then tested on the next time period. 
+The window then moves forward and the process repeats.This method closely simulates real-world trading conditions and prevents look-ahead bias. 
+It is commonly used in financial machine learning because markets evolve over time.
