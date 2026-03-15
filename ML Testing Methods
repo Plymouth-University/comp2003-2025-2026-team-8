@@ -40,3 +40,11 @@ Description:
 Robustness testing checks whether small changes or noise in the input data significantly affect the model’s predictions. 
 Slight variations can be added to market data or some sentiment signals can be removed.
 A reliable model should maintain relatively stable performance despite minor changes in the input data.
+
+7. Feature Importance Testing
+
+Description:
+This test examines which features contribute most to the model’s predictions. 
+Techniques such as SHAP values, permutation importance, or feature ablation can be used.
+By removing or altering specific features (such as sentiment scores), it becomes possible to determine whether those features meaningfully improve predictive
+performance.
