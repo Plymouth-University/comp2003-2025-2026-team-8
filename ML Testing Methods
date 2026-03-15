@@ -33,3 +33,10 @@ Performance can be measured using metrics such as accuracy, precision, recall, F
 Description:
 Stress testing evaluates how the model performs during extreme market conditions such as financial crises, rapid market crashes, or periods of high volatility. 
 Historical periods such as the 2008 financial crisis or the 2020 COVID-19 crash can be used to observe whether the model remains stable or produces excessive losses.
+
+6. Robustness Testing
+
+Description:
+Robustness testing checks whether small changes or noise in the input data significantly affect the model’s predictions. 
+Slight variations can be added to market data or some sentiment signals can be removed.
+A reliable model should maintain relatively stable performance despite minor changes in the input data.
