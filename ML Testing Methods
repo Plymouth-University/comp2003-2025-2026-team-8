@@ -1,1 +1,8 @@
 
+1. Train / Validation / Test Split
+
+Description:
+The dataset is divided into three parts: training data used to train the machine learning model, validation data used to tune model parameters,
+and test data used to evaluate the final performance.
+In financial systems this split should be time-based rather than random to avoid future information leaking into the training data.
+This method helps determine whether the model can generalize to unseen market conditions.
