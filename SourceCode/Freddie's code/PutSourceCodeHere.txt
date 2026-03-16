@@ -8,29 +8,23 @@ from datetime import datetime
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
-# -------- SETTINGS --------
 tickers = ["AAPL", "MSFT", "TSLA"]
 
 buythresh = 0.60
 sellthresh = 0.40
 trainratio = 0.80
 
-# Alpha Vantage settings
-apikey = os.getenv("ALPHAVANTAGE_API_KEY")  # set this in your environment
+apikey = os.getenv("ALPHAVANTAGE_API_KEY")
 baseurl = "https://www.alphavantage.co/query"
-sleepsecs = 12  # free tier rate limit
-
-# cache file (makes dataset grow over time)
+sleepsecs = 12  
 cachefile = "prices_cache.csv"
 
-# React export location (change this to your own path)
 file_path = r"C:/Users/alist/ai-finance-ui/src/marketData.json"
 
 if not apikey:
     print("Error: ALPHAVANTAGE_API_KEY not set.")
     exit()
 
-# -------- DOWNLOAD PRICES (DAILY) --------
 print("Getting price data from Alpha Vantage...")
 
 allrows = []
@@ -49,8 +43,6 @@ for i, tkr in enumerate(tickers):
             "ticker": tkr,
             "Close": float(vals["4. close"])
         })
-
-    # rate limit
     if i < len(tickers) - 1:
         time.sleep(sleepsecs)
 
@@ -61,8 +53,6 @@ if newdf.empty:
 
 newdf["dt"] = pd.to_datetime(newdf["dt"])
 newdf = newdf.sort_values(["ticker", "dt"])
-
-# cache / append
 if os.path.exists(cachefile):
     old = pd.read_csv(cachefile, parse_dates=["dt"])
     df = pd.concat([old, newdf], ignore_index=True)
@@ -71,13 +61,9 @@ else:
 
 df = df.drop_duplicates(subset=["dt", "ticker"]).sort_values(["ticker", "dt"]).reset_index(drop=True)
 df.to_csv(cachefile, index=False)
-
-# -------- FEATURES --------
 df["returnday1"] = df.groupby("ticker")["Close"].pct_change(1)
 df["fwdret"] = df.groupby("ticker")["Close"].shift(-1) / df["Close"] - 1.0
 df["yup"] = (df["fwdret"] > 0).astype(int)
-
-# -------- NEWS SENTIMENT (ALPHA VANTAGE) --------
 print("Getting news sentiment...")
 
 time.sleep(sleepsecs)  # just to avoid rate limit after price calls
@@ -115,15 +101,11 @@ else:
         newscount=("sentiment", "count"),
         newssent=("sentiment", "mean"),
     )
-
-# merge news onto prices
 df["dtdate"] = df["dt"].dt.date
 df = df.merge(agg, left_on=["dtdate", "ticker"], right_on=["dt", "ticker"], how="left")
 
 df["newscount"] = df["newscount"].fillna(0).astype(int)
 df["newssent"] = df["newssent"].fillna(0.0)
-
-# -------- ML --------
 df = df.dropna(subset=["returnday1", "yup"]).copy()
 df = df.sort_values(["dt", "ticker"]).copy()
 
@@ -146,8 +128,6 @@ baselineacc = accuracy_score(ytest, baseline)
 
 print(f"model accuracy:    {acc:.3f}")
 print(f"baseline accuracy: {baselineacc:.3f}")
-
-# -------- LATEST SIGNALS --------
 latest = df.sort_values(["ticker", "dt"]).groupby("ticker", as_index=False).tail(1).copy()
 latest["probup"] = model.predict_proba(latest[features])[:, 1]
 
@@ -159,8 +139,6 @@ def getsignal(p):
     return "HOLD"
 
 latest["signal"] = latest["probup"].apply(getsignal)
-
-# -------- EXPORT JSON FOR REACT --------
 export = {}
 for tkr in tickers:
     tkr_df = df[df["ticker"] == tkr].tail(15)
@@ -169,8 +147,6 @@ for tkr in tickers:
 
     row = latest[latest["ticker"] == tkr].iloc[0]
     last_price = float(tkr_df["Close"].iloc[-1])
-
-    # dumb UI prediction line
     if row["signal"] == "BUY":
         pred_price = last_price * 1.02
     elif row["signal"] == "SELL":
@@ -187,7 +163,6 @@ for tkr in tickers:
         "sentiment": "Positive" if float(row["newssent"]) > 0 else "Neutral/Negative",
     }
 
-# write JSON
 try:
     os.makedirs(os.path.dirname(file_path), exist_ok=True)
     with open(file_path, "w") as f:
