@@ -94,6 +94,29 @@ Next Meeting:
 9am
 Matthew Cravens office
 
+11/03/2026
+Meeting 7 
+9am
+Attended Dan Dawdry Freddie O’Shea  
+Matthew cravens office
+Changed Vader to alpha vantage
+Much better api meaning I sentiment analysis is greatly improved 
+Now able to use dynamic data sets
+Only able to update every 5 minutes
+Testing at the end of the month so need work to be done by the end of the month
+Should have the project base done by the end of the month
+
+What to do next:
+Integrate the code fully
+Prepare for testing of code
+Start keeping track of additional bits to add
+After March start thinking of optimisation
+
+Next session:
+25/03/2026
+9am
+Matthew Cravens office
+
 
 
 
