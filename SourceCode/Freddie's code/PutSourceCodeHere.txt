@@ -5,7 +5,6 @@ import json
 import requests
 import pandas as pd
 from datetime import datetime
-
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 
@@ -68,7 +67,7 @@ df["fwdret"] = df.groupby("ticker")["Close"].shift(-1) / df["Close"] - 1.0
 df["yup"] = (df["fwdret"] > 0).astype(int)
 print("Getting news sentiment...")
 
-time.sleep(sleepsecs)  # just to avoid rate limit after price calls
+time.sleep(sleepsecs) 
 
 newsurl = (
     f"{baseurl}?function=NEWS_SENTIMENT"
@@ -120,15 +119,36 @@ df = df.dropna(subset=["returnday1", "returnday5", "yup"]).copy()
 X = df[features]
 y = df["yup"].astype(int)
 
-splitidx = int(len(df) * trainratio)
-Xtrain, Xtest = X.iloc[:splitidx], X.iloc[splitidx:]
-ytrain, ytest = y.iloc[:splitidx], y.iloc[splitidx:]
 
-model = LogisticRegression(max_iter=500)
-model.fit(Xtrain, ytrain)
+df = df.sort_values(["dt", "ticker"]).copy()
+features = ["returnday1", "returnday5", "newscount", "newssent", "newssent3day"]
+X = df[features]
+y = df["yup"].astype(int)
 
-pred = model.predict(Xtest)
-acc = accuracy_score(ytest, pred)
+n_splits = 3
+split_size = len(df) // (n_splits + 1)
+scores = []
+for i in range(1, n_splits + 1):
+    train_end = split_size * i
+    test_end = split_size * (i + 1)
+    Xtrain = X.iloc[:train_end]
+    ytrain = y.iloc[:train_end]
+    Xtest = X.iloc[train_end:test_end]
+    ytest = y.iloc[train_end:test_end]
+    model = LogisticRegression(max_iter=500)
+    model.fit(Xtrain, ytrain)
+
+    preds = model.predict(Xtest)
+    acc = accuracy_score(ytest, preds)
+    scores.append(acc)
+
+    print(f"Split {i}")
+    print(f"Train rows: {len(Xtrain)}")
+    print(f"Test rows: {len(Xtest)}")
+    print(f"Accuracy: {acc:.3f}")
+    print("-" * 30)
+avg_acc = sum(scores) / len(scores)
+print(f"Average walk-forward accuracy: {avg_acc:.3f}")
 
 baseline = [1] * len(ytest)
 baselineacc = accuracy_score(ytest, baseline)
