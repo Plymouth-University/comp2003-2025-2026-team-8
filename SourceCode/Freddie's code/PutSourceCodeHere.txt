@@ -1,3 +1,4 @@
+def run_model():
 import os
 import time
 import json
@@ -169,6 +170,7 @@ try:
         json.dump(export, f, indent=2)
     print("Saved JSON to:", file_path)
 except Exception as e:
+    return export
     print("Could not save JSON:", e)
 
 print("\nSignals:")
