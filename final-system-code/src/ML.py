@@ -5,7 +5,7 @@ import yfinance as yf
 from sklearn.ensemble import RandomForestClassifier
 
 def run_model():
-    print("🚀 MODEL STARTED")
+    print("MODEL STARTED")
 
     tickers = [
         "AAPL", "MSFT", "TSLA", "GOOGL", "AMZN",
@@ -14,15 +14,13 @@ def run_model():
 
     file_path = os.path.join(os.path.dirname(__file__), "marketData.json")
 
-    print("📊 Fetching OHLC data from Yahoo Finance...")
+    print("Fetching OHLC data from Yahoo Finance...")
 
     data = yf.download(tickers, period="3mo", interval="1d", group_by="ticker")
 
     allrows = []
 
-    # =========================
-    # 📊 EXTRACT OHLC DATA
-    # =========================
+   # Extract OHLC data
     for tkr in tickers:
         try:
             df_tkr = data[tkr].dropna()
@@ -38,20 +36,18 @@ def run_model():
                 })
 
         except Exception as e:
-            print(f"⚠️ Skipping {tkr}: {e}")
+            print(f"Skipping {tkr}: {e}")
 
     df = pd.DataFrame(allrows)
 
     if df.empty:
-        print("❌ No data fetched")
+        print("No data fetched")
         return
 
     df["dt"] = pd.to_datetime(df["dt"])
     df = df.sort_values(["ticker", "dt"])
 
-    # =========================
-    # 🔥 FEATURES
-    # =========================
+   # Features
     df["ret1"] = df.groupby("ticker")["Close"].pct_change(1)
     df["ret3"] = df.groupby("ticker")["Close"].pct_change(3)
     df["ret7"] = df.groupby("ticker")["Close"].pct_change(7)
@@ -76,10 +72,8 @@ def run_model():
         "volatility"
     ]
 
-    # =========================
-    # 🤖 TRAIN MODELS
-    # =========================
-    print("🤖 Training models...")
+    # Train models
+    print("Training models...")
 
     models = {}
     accuracies = {}
@@ -88,7 +82,7 @@ def run_model():
         sub = df[df["ticker"] == tkr]
 
         if len(sub) < 30:
-            print(f"⚠️ Skipping {tkr}")
+            print(f"Skipping {tkr}")
             continue
 
         split = int(len(sub) * 0.8)
@@ -114,9 +108,7 @@ def run_model():
 
         models[tkr] = model
 
-    # =========================
-    # 📈 PREDICTIONS + EXPORT
-    # =========================
+    # Predictions and export
     latest = df.groupby("ticker").tail(1).copy()
 
     export = {}
@@ -151,7 +143,7 @@ def run_model():
 
         display = tkr.replace("-USD", "")
 
-        # 🔥 REAL CANDLE DATA
+        # Real candle data
         ohlc_data = [
             {
                 "time": d.strftime("%Y-%m-%d"),
@@ -172,7 +164,7 @@ def run_model():
         export[display] = {
             "labels": hist["dt"].dt.strftime("%b %d").tolist(),
             "historical": hist["Close"].round(2).tolist(),
-            "ohlc": ohlc_data,  # 🔥 NEW
+            "ohlc": ohlc_data, 
             "predicted": round(predicted, 2),
             "signal": signal,
             "confidence": round(confidence, 1),
@@ -180,13 +172,11 @@ def run_model():
             "accuracy": accuracies.get(tkr, None)
         }
 
-    # =========================
-    # 💾 SAVE
-    # =========================
+    # Save
     with open(file_path, "w") as f:
         json.dump(export, f, indent=2)
 
-    print("✅ Updated marketData.json")
+    print("Updated marketData.json")
 
 
 if __name__ == "__main__":
