@@ -6,7 +6,7 @@ export default function DecisionPanel({ market, data, currency }) {
   const isBuy = data.signal === "BUY";
   const isSell = data.signal === "SELL";
 
-  // 💱 Currency setup (same as ChartPanel)
+  // Currency setup (same as ChartPanel)
   const rates = {
     USD: 1,
     GBP: 0.79,
@@ -23,7 +23,7 @@ export default function DecisionPanel({ market, data, currency }) {
 
   const rate = rates[currency] || 1;
 
-  // 🔄 Convert predicted price
+  // Convert predicted price
   const convertedPrediction = data.predicted * rate;
 
   return (
@@ -67,7 +67,7 @@ export default function DecisionPanel({ market, data, currency }) {
         {data.confidence}% probability for the next price movement.
       </p>
 
-      {/* 💸 SIMULATOR */}
+      {/* Simulator */}
       <Simulator data={data} currency={currency} />
     </aside>
   );
