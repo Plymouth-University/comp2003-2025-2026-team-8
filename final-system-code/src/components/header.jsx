@@ -4,7 +4,7 @@ export default function Header({ onLogout, setCurrency }) {
       <h1 style={styles.logo}>AI Finance</h1>
 
       <div style={styles.right}>
-        {/* 💱 CURRENCY DROPDOWN */}
+        {/* Currency Dropdown */}
         <select
           onChange={(e) => setCurrency(e.target.value)}
           style={styles.dropdown}
