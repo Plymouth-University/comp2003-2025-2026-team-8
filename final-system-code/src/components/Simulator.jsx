@@ -3,7 +3,7 @@ import { useState } from "react";
 export default function Simulator({ data, currency }) {
   const [amount, setAmount] = useState("");
 
-  // 💱 same rates as chart
+  // same rates as chart
   const rates = {
     USD: 1,
     GBP: 0.79,
@@ -20,7 +20,7 @@ export default function Simulator({ data, currency }) {
 
   const rate = rates[currency] || 1;
 
-  // 🧠 Convert input → USD → apply prediction → convert back
+  // Convert input → USD → apply prediction → convert back
   const calculateReturn = () => {
     if (!amount || !data) return 0;
 
@@ -37,7 +37,7 @@ export default function Simulator({ data, currency }) {
 
   return (
     <div style={styles.container}>
-      <h3>💸 Investment Simulator</h3>
+      <h3>Investment Simulator</h3>
 
       <input
         type="number"
