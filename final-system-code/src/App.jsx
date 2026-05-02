@@ -51,13 +51,13 @@ export default function App() {
 
   return (
     <>
-      {/* 🔥 PASS setCurrency HERE */}
+      {/* Pass setCurrency Here */}
       <Header onLogout={handleLogout} setCurrency={setCurrency} />
 
       <div className="container">
         <Sidebar market={market} setMarket={setMarket} />
 
-        {/* 🔥 PASS currency HERE */}
+        {/* Pass currency Here */}
         <ChartPanel
           market={market}
           data={selectedData}
