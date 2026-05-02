@@ -11,15 +11,11 @@ const authMiddleware = require("./middleware/authMiddleware");
 
 const app = express();
 
-// =====================
-// MIDDLEWARE
-// =====================
+// Middleware
 app.use(cors());
 app.use(express.json());
 
-// =====================
-// ROUTES
-// =====================
+// Routes
 
 // Auth routes
 app.use("/api/auth", authRoutes);
@@ -29,7 +25,7 @@ app.get("/api/protected", authMiddleware, (req, res) => {
   res.json({ message: "You accessed a protected route!" });
 });
 
-// 🔥 NEW: Market Data API
+// Market Data API
 app.get("/api/market-data", (req, res) => {
   const filePath = path.join(__dirname, "../src/marketData.json");
 
@@ -49,16 +45,12 @@ app.get("/api/market-data", (req, res) => {
   });
 });
 
-// =====================
-// DATABASE
-// =====================
+// Database
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB connected"))
   .catch(err => console.log("MongoDB error:", err));
 
-// =====================
-// SERVER
-// =====================
+// Server
 const PORT = 5000;
 
 app.listen(PORT, () => {
