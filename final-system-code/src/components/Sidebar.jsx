@@ -7,8 +7,8 @@ export default function Sidebar({ market, setMarket }) {
     <aside style={styles.sidebar}>
       <h2>Markets</h2>
 
-      {/* 📈 Stocks */}
-      <h3 style={styles.section}>📈 Stocks</h3>
+      {/* Stocks */}
+      <h3 style={styles.section}>Stocks</h3>
       <ul style={styles.list}>
         {stocks.map((m) => (
           <li
@@ -24,8 +24,8 @@ export default function Sidebar({ market, setMarket }) {
         ))}
       </ul>
 
-      {/* 🪙 Crypto */}
-      <h3 style={styles.section}>🪙 Crypto</h3>
+      {/* Crypto */}
+      <h3 style={styles.section}>Crypto</h3>
       <ul style={styles.list}>
         {crypto.map((m) => (
           <li
