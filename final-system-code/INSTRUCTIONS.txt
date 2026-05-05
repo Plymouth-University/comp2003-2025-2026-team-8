@@ -46,3 +46,10 @@ npm run dev -- --host (To run a web server)
 
 Step 5
 Open the provided link
+
+
+Login:
+	- Email: test@test.com
+	- Password: 123456
+
+Account features were added at the late stage and this is the temporary placeholder account we used for the time being.
