@@ -12,11 +12,13 @@ There are TWO ways of running the web application
 Method 1 - Quick Way
 
 Step 1
-double-click:
+Right-Click and run as administrator:
 run_app.bat
 
 This should automatically bring up the web app.
 To shut down server just go to the original .bat terminal and press any key.
+If running without administrator it may block the app but don't worry the .bat file is completely safe.
+If there are any security concerns you can run it yourself with method 2.
 
 
 Method 2 - If there are issues with dependencies
