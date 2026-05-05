@@ -37,7 +37,32 @@ This folder contains:
 Other folders in this repository may contain planning documents, design work, or earlier versions of the system.
 
 ### Running the Project
-Follow these steps to run the system on your machine
+Follow these steps to run the system on your machine.
+
+Requirements:
+	- Python 3 installed
+	- Node.js installed
+
+Install Python packages:
+	- pip install pandas yfinance feedparser vaderSentiment scikit-learn
+
+!!There are TWO ways of running the web application!!
+
+### Method 1 - Quick Way
+
+#### 1. Navigate to the Project Folder
+Go into the final-system-code folder
+
+#### 2. Run the .bat File
+Right-Click and run as administrator:
+run_app.bat
+
+This should automatically bring up the web app.
+To shut down server just go to the original .bat terminal and press any key.
+If running without administrator it may block the app but don't worry the .bat file is completely safe.
+If there are any security concerns you can run it yourself with method 2.
+
+### Method 2 - If there are issues with dependencies (Open the project folder in IDE)
 
 #### 1. Navigate to the Project Folder
 `cd final-system-code`
